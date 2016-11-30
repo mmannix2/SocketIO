@@ -18,7 +18,7 @@ INSERT INTO users (username, password) VALUES ('Gimli', crypt('Ihateelves', gen_
 INSERT INTO users (username, password) VALUES ('Legolas', crypt('Ilovegimli', gen_salt('bf')));
 INSERT INTO users (username, password) VALUES ('Frodo', crypt('bagend', gen_salt('bf')));
 INSERT INTO users (username, password) VALUES ('Gollum', crypt('myprecious', gen_salt('bf')));
-
+INSERT INTO users (username, password) VALUES ('Gandalf the Grey', crypt('Shadowfax', gen_salt('bf')));
 -- 
 -- TABLE structure for messages 
 --
@@ -39,4 +39,4 @@ ALTER USER sauron WITH PASSWORD 'mordor';
 
 grant all on users to sauron;
 grant all on messages to sauron;
---grant all on users_id_seq to timmy;
+grant all on messages_id_seq to sauron;

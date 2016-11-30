@@ -19,12 +19,12 @@
           <h1>Gandalf Chat</h1>
           <div id="popupbox" ng-hide="loggedIn">
             <p>YOU SHALL NOT PASS!!! (Unless you log in)</p>
-            <form ng-submit="logIn()">
+            <form ng-submit="login()">
               <label for="username">Username</label>
-              <input type="text" name="username" ng-model="username" placeholder="Gandalf the Grey" size="14" />
+              <input type="text" name="username" ng-model="username" placeholder="" size="14" />
               <br>
               <label for="password">Password</label>
-              <input type="password" name="password" ng-model="password" placeholder="Shadowfax" size="14" />
+              <input type="password" name="password" ng-model="password" placeholder="" size="14" />
               <br>
               <input type="submit" value="Log In" ng-disabled="!username">
             </form>
@@ -32,19 +32,19 @@
           <div id="chat" ng-show="loggedIn">
             <p>
               Welcome, {{username}}!
-              <form ng-submit="logOut()">
+              <form ng-submit="logout()">
                 <input type="submit" value="Log Out">
               </form>
             </p>
             <div class="scroll" id="msgpane">
               <span ng-repeat="msg in messages">
-                <b ng-bind="msg[0]"></b>:&nbsp;<span ng-bind="msg[1]"></span><br>
+                <b ng-bind="msg['username']"></b>:&nbsp;<span ng-bind="msg['message']"></span><br>
               </span>
             </div>
             <p>
-              <form ng-submit="sendText()">
-                <input ng-model='text' type="text"  size="30"  placeholder="...">
-                <input type="submit" value="Send" ng-disabled="!name&&!text">
+              <form ng-submit="postMessage()">
+                <input ng-model='message' type="text"  size="30"  placeholder="...">
+                <input type="submit" value="Send" ng-disabled="!message">
               </form>
             </p>
           </div>
