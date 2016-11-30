@@ -1,63 +1,60 @@
 <!doctype html>
-<html>
+<html ng-app="GandalfChatApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Space</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <title>Gandalf</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pygment_trac.css">
     <meta name="viewport" content="width=device-width">
-    
-
-    
+    <meta name="theme-color" content="#88857c">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
   </head>
   <body>
-  
-
-    <div class="wrapper" >
-      <header>
-        <h1>Chat</h1>
-        <p>Live chat the live feed</p>
-        <p>Name:
-          <input type="text"    placeholder="Username" size="14" /></p>
-         <div class="scroll" id="msgpane">
-         <p >Some messages here!
-                
-              </p>
-         
-         
-         </div>
-         
-         <form>
-              
-                <input type="text"  size="30"  placeholder="..">
-                <input type="submit"  value="Send" >
-             
+    <div class ="container" ng-controller="ChatController"> 
+      <div class="wrapper" >
+        <header>
+          <h1>Gandalf Chat</h1>
+          <div id="popupbox" ng-hide="loggedIn">
+            <p>YOU SHALL NOT PASS!!! (Unless you log in)</p>
+            <form ng-submit="logIn()">
+              <label for="username">Username</label>
+              <input type="text" name="username" ng-model="username" placeholder="Gandalf the Grey" size="14" />
+              <br>
+              <label for="password">Password</label>
+              <input type="password" name="password" ng-model="password" placeholder="Shadowfax" size="14" />
+              <br>
+              <input type="submit" value="Log In" ng-disabled="!username">
             </form>
-      </header>
-      <section>
-        <h1>ISS Live</h1>
-            <iframe width="480" height="264" 
-            src="https://www.ustream.tv/embed/9408562?ub=ff3d23&amp;lc=ff3d23&amp;oc=ffffff&amp;uc=ffffff&amp;html5ui=1" 
-            allowfullscreen="true" webkitallowfullscreen="true" scrolling="no" frameborder="0" style="border: 0px none transparent;">    
-            </iframe>
-
-         <br />
-
-        <h2>Earth Viewing Experiment</h2>
-
-        <iframe width="480" height="270" 
-        src="https://www.ustream.tv/embed/17074538?html5ui=1" 
-        allowfullscreen="true" webkitallowfullscreen="true" scrolling="no" frameborder="0" style="border: 0px none transparent;">    
-        </iframe>
-
-
-        <p>International Space Station Live Feed</p>
-
-        
-      
-    </div>
+          </div>
+          <div id="chat" ng-show="loggedIn">
+            <p>
+              Welcome, {{username}}!
+              <form ng-submit="logOut()">
+                <input type="submit" value="Log Out">
+              </form>
+            </p>
+            <div class="scroll" id="msgpane">
+              <span ng-repeat="msg in messages">
+                <b ng-bind="msg[0]"></b>:&nbsp;<span ng-bind="msg[1]"></span><br>
+              </span>
+            </div>
+            <p>
+              <form ng-submit="sendText()">
+                <input ng-model='text' type="text"  size="30"  placeholder="...">
+                <input type="submit" value="Send" ng-disabled="!name&&!text">
+              </form>
+            </p>
+          </div>
+        </header>
+        <section>
+          <h1>Gandalf Videos</h1>
+          <div class='embed-container'><iframe src='http://www.youtube.com/embed/Sagg08DrO5U' frameborder='0' allowfullscreen></iframe></div>
+        </section>  
+      </div>
     <script src="js/scale.fix.js"></script>
+    </div>
   </body>
 </html>
