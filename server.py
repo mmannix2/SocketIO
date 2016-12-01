@@ -13,7 +13,6 @@ socketio = SocketIO(app)
 
 def connectToDB():
     connectString = 'dbname=gandalf user=sauron password=mordor host=localhost'
-    
     try:
         print("Connected to the database!")
         return psycopg2.connect(connectString)

@@ -5,8 +5,16 @@ ISSChatApp.controller('ChatController', function($scope){
     +location.port + '/gandalf'); 
     
     $scope.messages = [];
+    $scope.results = ["result1", "result2"];
     
-    $scope.loggedIn = false;
+    /*
+     * Holds the state of the web page
+     * 0 - loggedOut
+     * 1 - chat
+     * 2 - search
+     */
+    $scope.pageState = 0; 
+    
     $scope.username = '';
     $scope.password = '';
     $scope.message = '';
@@ -22,7 +30,7 @@ ISSChatApp.controller('ChatController', function($scope){
     
     socket.on('loginSucceeded', function(){
         console.log($scope.username + " logged in successfully!");
-        $scope.loggedIn = true;
+        $scope.pageState = 1;
         $scope.$apply();
     });
     
@@ -32,7 +40,8 @@ ISSChatApp.controller('ChatController', function($scope){
     
     $scope.logout = function logout(){
         console.log($scope.username + " logged out.");
-        $scope.loggedIn = false;
+        $scope.pageState = 0;
+        //$scope.$apply();
     };
     
     $scope.postMessage = function postMessage(){
@@ -42,11 +51,37 @@ ISSChatApp.controller('ChatController', function($scope){
     };
     
     socket.on('messagePosted', function(msg){
-        console.log("Loaded a message from the server.")
+        console.log("Loaded a message from the server.");
         $scope.messages.push(msg);
         $scope.$apply();
         
-        var elem = document.getElementById('msgpane');
+        var elem = document.getElementById('msgPane');
+        elem.scrollTop = elem.scrollHeightArray;
+    });
+    
+    $scope.search = function search(searchTerm){
+        console.log("Searching ? for: " + searchTerm);
+        $scope.hasSearched = true; 
+    };
+    
+    $scope.goToChat = function goToChat(){
+        console.log($scope.username + " switched to chat.");
+        $scope.pageState = 1;
+        //$scope.$apply();
+    };
+    
+    $scope.goToSearch = function goToSearch(){
+        console.log($scope.username + " switched to search.");
+        $scope.pageState = 2;
+        //$scope.$apply();
+    };
+    
+    socket.on('resultsFound', function(msg){
+        console.log("Search results have been found on the server.");
+        $scope.results.push(msg);
+        $scope.$apply();
+        
+        var elem = document.getElementById('msgPane');
         elem.scrollTop = elem.scrollHeightArray;
     });
 });

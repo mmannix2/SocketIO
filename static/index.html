@@ -17,42 +17,79 @@
       <div class="wrapper" >
         <header>
           <h1>Gandalf Chat</h1>
-          <div id="popupbox" ng-hide="loggedIn">
-            <p>YOU SHALL NOT PASS!!! (Unless you log in)</p>
+          <form ng-show="pageState == 0">
+            <input type="submit" value="Register" ng-click="" ng-disabled="pageState != 0">
+          </form>
+          <form ng-show="pageState != 0">
+            <input type="submit" value="Chat" ng-click="goToChat()" ng-disabled="pageState == 1">
+            <input type="submit" value="Scry" ng-click="goToSearch()" ng-disabled="pageState == 2">
+            <input type="submit" value="Log Out" ng-click="logout()">
+          </form>
+          <br>
+          <div class='embed-container'><iframe src='http://www.youtube.com/embed/Sagg08DrO5U' frameborder='0' allowfullscreen></iframe></div>
+        </header>
+        <section>
+          <div ng-show="pageState == 0">
+            <h2>YOU SHALL NOT PASS!!!</h2>
+            <p>Unless you log in</p>
             <form ng-submit="login()">
-              <label for="username">Username</label>
-              <input type="text" name="username" ng-model="username" placeholder="" size="14" />
+              <label>
+                Username
+                <input type="text" name="username" ng-model="username" placeholder="" size="14" />
+              </label>
               <br>
-              <label for="password">Password</label>
-              <input type="password" name="password" ng-model="password" placeholder="" size="14" />
+              <label>
+                Password
+                <input type="password" name="password" ng-model="password" placeholder="" size="14" />
+              </label>
               <br>
               <input type="submit" value="Log In" ng-disabled="!username">
             </form>
           </div>
-          <div id="chat" ng-show="loggedIn">
-            <p>
-              Welcome, {{username}}!
-              <form ng-submit="logout()">
-                <input type="submit" value="Log Out">
-              </form>
-            </p>
-            <div class="scroll" id="msgpane">
-              <span ng-repeat="msg in messages">
-                <b ng-bind="msg['username']"></b>:&nbsp;<span ng-bind="msg['message']"></span><br>
-              </span>
+          <div ng-show="pageState != 0">
+            <div id="chat" ng-show="pageState == 1">
+              <h2>Chat</h2>
+              <p>What say you, {{username}}?</p>
+              <div class="scroll" id="msgPane">
+                <span ng-repeat="msg in messages">
+                  <b ng-bind="msg['username']"></b><b>:</b>&nbsp;<span ng-bind="msg['message']"></span><br>
+                </span>
+              </div>
+              <p>
+                <form ng-submit="postMessage()">
+                  <input ng-model='message' type="text"  size="32"  placeholder="..."/>
+                  <input type="submit" value="Send" ng-disabled="!message"/>
+                </form>
+              </p>
             </div>
-            <p>
-              <form ng-submit="postMessage()">
-                <input ng-model='message' type="text"  size="30"  placeholder="...">
-                <input type="submit" value="Send" ng-disabled="!message">
+            <div id="search" ng-show="pageState == 2">
+              <h2>Box of Scrying</h2>
+              <p>
+                Use the power of the all-seeing eye of Sauron to search the comments!
+              </p>
+              <br>
+              <form ng-submit="search()">
+                <label>
+                  Usernames
+                  <input type="checkbox" name="searchUsernames" checked="true"/>
+                </label>
+                <br>
+                <label>
+                  Messages
+                  <input type="checkbox" name="searchMessages"/>
+                </label>
+                <br>
+                <input type="text" name="searchBox" size="32" ng-model="searchBox"/>
+                <input type="submit" value="Scry" ng-disabled="!searchBox"/>
               </form>
-            </p>
+              <div class="scroll" id="searchPane">
+                <span ng-repeat="result in resultss">
+                  <b ng-bind="result['username']"></b><b>:</b>&nbsp;<span ng-bind="result['message']"></span><br>
+                </span>
+              </div>
+            </div>
           </div>
-        </header>
-        <section>
-          <h1>Gandalf Videos</h1>
-          <div class='embed-container'><iframe src='http://www.youtube.com/embed/Sagg08DrO5U' frameborder='0' allowfullscreen></iframe></div>
-        </section>  
+        </section>
       </div>
     <script src="js/scale.fix.js"></script>
     </div>
