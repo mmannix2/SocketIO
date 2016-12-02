@@ -58,8 +58,8 @@
               <p>
                 <form ng-submit="postMessage()">
                   <div class="entryBox">
-                    <input ng-model='message' type="text"  placeholder="..."/>
-                    <input type="submit" value="Send" ng-disabled="!message"/>
+                    <input class="textBox" ng-model='message' type="text" placeholder="..."/>
+                    <input class="entryButton" type="submit" value="Send" ng-disabled="!message"/>
                   </div>
                 </form>
               </p>
@@ -81,8 +81,10 @@
                     <input type="checkbox" name="searchMessages" ng-model="searchMessages"/>
                   </label>
                   <br>
-                  <input type="text" name="searchTerm" size="32" ng-model="searchTerm"/>
-                  <input type="submit" value="Scry" ng-disabled="!searchTerm || (!searchUsernames && !searchMessages)"/>
+                  <div class="entryBox">
+                    <input class="textBox" type="text" name="searchTerm" ng-model="searchTerm"/>
+                    <input class="entryButton" type="submit" value="Scry" ng-disabled="!searchTerm || (!searchUsernames && !searchMessages)"/>
+                  </div>
                 </form>
               </p>
               <div class="scroll" id="searchPane" ng-show="results.length > 0">

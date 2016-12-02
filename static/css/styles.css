@@ -196,6 +196,14 @@ footer {
   -webkit-font-smoothing:subpixel-antialiased;
 }
 
+.entryBox .textBox {
+  width: 85%;
+}
+
+.entryBox .entryButton {
+  float: right;
+}
+
 @media print, screen and (max-width: 960px) {
 
   div.wrapper {
