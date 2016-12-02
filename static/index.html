@@ -57,8 +57,10 @@
               </div>
               <p>
                 <form ng-submit="postMessage()">
-                  <input ng-model='message' type="text"  size="32"  placeholder="..."/>
-                  <input type="submit" value="Send" ng-disabled="!message"/>
+                  <div class="entryBox">
+                    <input ng-model='message' type="text"  placeholder="..."/>
+                    <input type="submit" value="Send" ng-disabled="!message"/>
+                  </div>
                 </form>
               </p>
             </div>
@@ -67,23 +69,24 @@
               <p>
                 Use the power of the all-seeing eye of Sauron to search the comments!
               </p>
-              <br>
-              <form ng-submit="search()">
-                <label>
-                  Usernames
-                  <input type="checkbox" name="searchUsernames" checked="true"/>
-                </label>
-                <br>
-                <label>
-                  Messages
-                  <input type="checkbox" name="searchMessages"/>
-                </label>
-                <br>
-                <input type="text" name="searchBox" size="32" ng-model="searchBox"/>
-                <input type="submit" value="Scry" ng-disabled="!searchBox"/>
-              </form>
-              <div class="scroll" id="searchPane">
-                <span ng-repeat="result in resultss">
+              <p>
+                <form ng-submit="search()">
+                  <label>
+                    Usernames
+                    <input type="checkbox" name="searchUsernames" ng-model="searchUsernames"/>
+                  </label>
+                  <br>
+                  <label>
+                    Messages
+                    <input type="checkbox" name="searchMessages" ng-model="searchMessages"/>
+                  </label>
+                  <br>
+                  <input type="text" name="searchTerm" size="32" ng-model="searchTerm"/>
+                  <input type="submit" value="Scry" ng-disabled="!searchTerm || (!searchUsernames && !searchMessages)"/>
+                </form>
+              </p>
+              <div class="scroll" id="searchPane" ng-show="results.length > 0">
+                <span ng-repeat="result in results">
                   <b ng-bind="result['username']"></b><b>:</b>&nbsp;<span ng-bind="result['message']"></span><br>
                 </span>
               </div>

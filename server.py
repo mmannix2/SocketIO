@@ -45,9 +45,10 @@ def loadMessages():
     messages = cur.fetchall()
     
     for message in messages:
-        print(message)
+        #print(message)
         emit('messagePosted', {'username': message[0], 'message': message[1]})
-    
+    print "All messages loaded."
+     
 @socketio.on('login', namespace='/gandalf')
 def attempt_logIn(data):
     print(data['username'] + 
@@ -81,7 +82,45 @@ def on_message(message):
         conn.rollback()
         print("INSERT failed.")
         print e
+        
+@socketio.on('search', namespace='/gandalf')
+def search(data):
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    print data
+    
+    query = "SELECT username, message FROM messages WHERE "
+    if data['searchUsernames']:
+        query += "username LIKE %s "
+        
+    if data['searchMessages']:
+        if data['searchUsernames']:
+            query += "OR "
+        query += "message LIKE %s "
+    query += ";"
+    
+    if data['searchUsernames'] and data['searchMessages']:
+        query = cur.mogrify(query, ("%" + data['searchTerm'] + "%", "%" + data['searchTerm'] + "%"))
+    else:
+        query = cur.mogrify(query, ("%" + data['searchTerm'] + "%",))
+     
+    print query
+    
+    try:
+        cur.execute(query)
+        results = cur.fetchall()
+        print results
+        if len(results) != 0:
+            for result in results:
+                emit('resultFound', {'username': result[0], 'message': result[1]}) 
+        else:
+            emit('resultNotFound')
+            
+    except Exception as e:
+        print("SELECT failed.")
+        print e
+        
 # start the server
 if __name__ == '__main__':
         socketio.run(app,

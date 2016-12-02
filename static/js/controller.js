@@ -5,7 +5,7 @@ ISSChatApp.controller('ChatController', function($scope){
     +location.port + '/gandalf'); 
     
     $scope.messages = [];
-    $scope.results = ["result1", "result2"];
+    $scope.results = [];
     
     /*
      * Holds the state of the web page
@@ -13,7 +13,12 @@ ISSChatApp.controller('ChatController', function($scope){
      * 1 - chat
      * 2 - search
      */
-    $scope.pageState = 0; 
+    $scope.pageState = 0;
+    
+    $scope.searchUsernames = true;
+    $scope.searchMessages = false;
+    
+    $scope.searchTerm = '';
     
     $scope.username = '';
     $scope.password = '';
@@ -24,8 +29,12 @@ ISSChatApp.controller('ChatController', function($scope){
     });
     
     $scope.login = function login(){
-        console.log($scope.username + " logging in with password: " + $scope.password);
-        socket.emit('login', {'username': $scope.username, 'password': $scope.password});
+        console.log($scope.username +
+                    " logging in with password: " +
+                    $scope.password);
+        socket.emit('login',
+                    {'username': $scope.username,
+                    'password': $scope.password });
     };
     
     socket.on('loginSucceeded', function(){
@@ -59,10 +68,34 @@ ISSChatApp.controller('ChatController', function($scope){
         elem.scrollTop = elem.scrollHeightArray;
     });
     
-    $scope.search = function search(searchTerm){
-        console.log("Searching ? for: " + searchTerm);
-        $scope.hasSearched = true; 
+    $scope.search = function search(){
+        console.log("Searching" +
+                    ($scope.searchUsernames ?
+                        ($scope.searchMessages ?
+                            " Usernames and Messages " : " Usernames ") :
+                        $scope.searchMessages ? " Messages " : " NONE " ) +
+                    "for: " + $scope.searchTerm);
+        while($scope.results.length > 0) {
+            $scope.results.pop();
+        }
+        socket.emit('search',
+                    {'searchTerm': $scope.searchTerm,
+                    'searchUsernames': $scope.searchUsernames,
+                    'searchMessages': $scope.searchMessages});
     };
+    
+    socket.on('resultFound', function(res){
+        console.log("A search result has been recieved from the server.");
+        $scope.results.push(res);
+        $scope.$apply();
+        
+        var elem = document.getElementById('msgPane');
+        elem.scrollTop = elem.scrollHeightArray;
+    });
+    
+    socket.on('resultNotFound', function(){
+        console.log("Search results have NOT been found on the server!");
+    });
     
     $scope.goToChat = function goToChat(){
         console.log($scope.username + " switched to chat.");
@@ -76,12 +109,4 @@ ISSChatApp.controller('ChatController', function($scope){
         //$scope.$apply();
     };
     
-    socket.on('resultsFound', function(msg){
-        console.log("Search results have been found on the server.");
-        $scope.results.push(msg);
-        $scope.$apply();
-        
-        var elem = document.getElementById('msgPane');
-        elem.scrollTop = elem.scrollHeightArray;
-    });
 });
