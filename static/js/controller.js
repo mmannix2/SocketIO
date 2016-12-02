@@ -19,6 +19,7 @@ ISSChatApp.controller('ChatController', function($scope){
     $scope.searchMessages = false;
     
     $scope.searchTerm = '';
+    $scope.noResult = false;
     
     $scope.username = '';
     $scope.password = '';
@@ -75,9 +76,11 @@ ISSChatApp.controller('ChatController', function($scope){
                             " Usernames and Messages " : " Usernames ") :
                         $scope.searchMessages ? " Messages " : " NONE " ) +
                     "for: " + $scope.searchTerm);
+        //Reset results and noResult
         while($scope.results.length > 0) {
             $scope.results.pop();
         }
+        $scope.noResult = false;
         socket.emit('search',
                     {'searchTerm': $scope.searchTerm,
                     'searchUsernames': $scope.searchUsernames,
@@ -95,6 +98,8 @@ ISSChatApp.controller('ChatController', function($scope){
     
     socket.on('resultNotFound', function(){
         console.log("Search results have NOT been found on the server!");
+        $scope.noResult = true;
+        $scope.$apply();
     });
     
     $scope.goToChat = function goToChat(){
